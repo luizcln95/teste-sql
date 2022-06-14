@@ -1,6 +1,7 @@
 f1_q1 = ('''
         SELECT AddressOrigin, SUM(TotalSent) AS TotalSentSum
         FROM raw_transactions_table
+        WHERE Status = 'Confirmed'
         GROUP BY AddressOrigin
         ORDER BY TotalSentSum DESC
         LIMIT 1;
@@ -9,6 +10,7 @@ f1_q1 = ('''
 f1_q2 = ('''
         SELECT DAYOFMONTH(SentDate) as MonthDay, SUM(TotalSent) AS TotalSentSum
         FROM raw_transactions_table
+        WHERE Status = 'Confirmed'
         GROUP BY MonthDay
         ORDER BY TotalSentSum DESC
         LIMIT 1;
@@ -24,6 +26,7 @@ f1_q3 = ('''
                     WHEN WEEKDAY(SentDate) = 6 THEN 'Sunday' END
                     AS WeekDay, COUNT(IdTransaction) AS TransactionsCount
         FROM raw_transactions_table
+        WHERE Status = 'Confirmed'
         GROUP BY WeekDay
         ORDER BY TransactionsCount DESC
         LIMIT 1;
@@ -39,11 +42,12 @@ f1_q5 = ('''
         FROM 
         (SELECT AddressOrigin, sum(TotalSent) AS TotalSent
         FROM raw_transactions_table
+        WHERE Status = 'Confirmed'
         GROUP BY AddressOrigin) AS subquery1,
         (SELECT AddressDestination, sum(TotalSent) AS TotalReceived
         FROM raw_transactions_table
+        WHERE Status = 'Confirmed'
         GROUP BY AddressDestination) AS subquery2
         WHERE subquery1.AddressOrigin = subquery2.AddressDestination
-        ORDER BY Balance DESC
-        LIMIT 1;
+        ORDER BY Balance DESC;
         ''')
